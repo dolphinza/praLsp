@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.ResultSet;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -84,6 +85,11 @@ public class pageCrud1 extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
         btnBack.setText("kembali");
+        btnBack.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBackActionPerformed(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         jLabel1.setText("Halaman CRUD 1");
@@ -319,6 +325,20 @@ public class pageCrud1 extends javax.swing.JFrame {
             loadData();
         }
     }//GEN-LAST:event_btnTambahActionPerformed
+
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+        // TODO add your handling code here:
+        int jawab = JOptionPane.showOptionDialog(this, "Ingin kembali ke halaman utama?", "Ya", 
+                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null );
+        
+        if(jawab == JOptionPane.YES_NO_OPTION){
+            halamanUtama home = new halamanUtama();
+            home.setVisible(true);
+            dispose();
+        }
+        
+        
+    }//GEN-LAST:event_btnBackActionPerformed
 
     /**
      * @param args the command line arguments
