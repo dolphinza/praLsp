@@ -6,6 +6,7 @@
 package appdbPackage;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.ResultSet;
@@ -114,6 +115,11 @@ public class pageCrud1 extends javax.swing.JFrame {
 
         btnTambah.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         btnTambah.setText("TAMBAH");
+        btnTambah.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTambahActionPerformed(evt);
+            }
+        });
 
         btnUbah.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         btnUbah.setText("UBAH");
@@ -125,6 +131,11 @@ public class pageCrud1 extends javax.swing.JFrame {
 
         btnHapus.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         btnHapus.setText("HAPUS");
+        btnHapus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHapusActionPerformed(evt);
+            }
+        });
 
         ReadData.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         ReadData.setModel(new javax.swing.table.DefaultTableModel(
@@ -234,7 +245,26 @@ public class pageCrud1 extends javax.swing.JFrame {
     }//GEN-LAST:event_busSeatCountActionPerformed
 
     private void btnUbahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUbahActionPerformed
-        // TODO add your handling code here:
+        int i = ReadData.getSelectedRow();
+        String ID = (String) model.getValueAt(i, 0);
+        String Type = tipePesawat.getText();
+        String Eco = ecoSeatCount.getText();
+        String Business = busSeatCount.getText();
+        try{
+            Connection conn = konekdb.SambungKoneksi();
+            String sql = "UPDATE airplane SET type = ?, economy_num = ?, business_num = ? WHERE id_airplane = ?";
+            PreparedStatement p = conn.prepareStatement(sql);
+            p.setString(1, Type);
+            p.setString(2, Eco);
+            p.setString(3, Business);
+            p.setString(4, ID);
+            p.executeUpdate();
+            p.close();
+        }catch(SQLException e){
+            System.out.println(e);
+        }finally{
+            loadData();
+        }
     }//GEN-LAST:event_btnUbahActionPerformed
 
     private void ecoSeatCountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ecoSeatCountActionPerformed
@@ -244,7 +274,51 @@ public class pageCrud1 extends javax.swing.JFrame {
     private void ReadDataMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ReadDataMouseClicked
         int baris = ReadData.getSelectedRow();
         String id = (String) model.getValueAt(baris, 0); // mengambil data id_airplane pada tabel
+        String tipe = (String) model.getValueAt(baris, 1); // mengambil tipe pesawat
+        tipePesawat.setText(tipe);
+        String eco = (String) model.getValueAt(baris, 2);
+        ecoSeatCount.setText(eco);
+        String buss = (String) model.getValueAt(baris, 3);
+        busSeatCount.setText(buss);
     }//GEN-LAST:event_ReadDataMouseClicked
+
+    private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
+        int baris = ReadData.getSelectedRow();
+        String id = (String) model.getValueAt(baris, 0);
+        try{
+            Connection konek = konekdb.SambungKoneksi();
+            String sql = "DELETE FROM airplane WHERE id_airplane =?";
+            PreparedStatement ps = konek.prepareStatement(sql);
+            ps.setString(1,id);
+            ps.executeUpdate();
+            ps.close();
+        }catch(SQLException e){
+            System.out.println(e);
+        }finally{
+            loadData();
+        }
+    }//GEN-LAST:event_btnHapusActionPerformed
+
+    private void btnTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTambahActionPerformed
+        // TODO add your handling code here:
+        String Type = tipePesawat.getText();
+        String Eco = ecoSeatCount.getText();
+        String Business = busSeatCount.getText();
+        try{
+            Connection conn = konekdb.SambungKoneksi();
+            String sql = "INSERT INTO airplane(type, economy_num, business_num) VALUES (?,?,?)";
+            PreparedStatement p = conn.prepareCall(sql);
+            p.setString(1, Type);
+            p.setString(2, Eco);
+            p.setString(3, Business);
+            p.executeUpdate();
+            p.close();
+        }catch(SQLException e){
+            System.out.println(e);
+        }finally{
+            loadData();
+        }
+    }//GEN-LAST:event_btnTambahActionPerformed
 
     /**
      * @param args the command line arguments
